@@ -1,4 +1,4 @@
-from .display import regular_font, BLACK, WHITE
+from display import regular_font, BLACK, WHITE
 
 
 def handle_post_its(post_it_entity, context, draw):

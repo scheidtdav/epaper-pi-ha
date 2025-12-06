@@ -1,4 +1,4 @@
-from .display import icon_font, large_font, BLACK
+from display import icon_font, large_font, BLACK
 
 ICON_MAP = {
     "clear-night": "C",
