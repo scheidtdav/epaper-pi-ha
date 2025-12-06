@@ -117,8 +117,9 @@ async def handle_buttons():
 
 
 async def fetch_data():
-    async with WebsocketClient(HA_URL, HA_TOKEN) as client:
+    with WebsocketClient(HA_URL, HA_TOKEN) as client:
         while True:
+            global ENTITY_STATES, POST_ITS, WEATHER_FORECAST
             new_states = []
             new_post_its = []
             for i in ENTITY_IDS:
@@ -127,7 +128,7 @@ async def fetch_data():
                 # WEATHER
                 if i.startswith("weather"):
                     weather = client.get_domain("weather")
-                    changed_states, data = await weather.get_forecasts(
+                    changed_states, data = weather.get_forecasts(
                         entity_id=i,
                         type="daily",
                     )
@@ -137,10 +138,9 @@ async def fetch_data():
                 # type of entity
                 # if(i.startswith("todo")):
                 #     todo = client.get_domain("todo")
-                #     changed_states, data = await todo.get_items(entity_id=i)
+                #     changed_states, data = todo.get_items(entity_id=i)
                 #     new_post_its.append(data)
 
-            global ENTITY_STATES, POST_ITS
             ENTITY_STATES = new_states
             POST_ITS = new_post_its
             await asyncio.sleep(DATA_UPDATE_TIMEOUT)
