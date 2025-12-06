@@ -6,7 +6,7 @@ import os
 import json
 from adafruit_epd.epd import Adafruit_EPD
 from adafruit_epd.ssd1675 import Adafruit_SSD1675
-from homeassistant_api import Client
+from homeassistant_api import WebsocketClient
 from dotenv import load_dotenv
 from PIL import Image, ImageDraw, ImageFont
 
@@ -117,16 +117,16 @@ async def handle_buttons():
 
 
 async def fetch_data():
-    async with Client(HA_URL, HA_TOKEN, use_async=True) as client:
+    async with WebsocketClient(HA_URL, HA_TOKEN) as client:
         while True:
             new_states = []
             new_post_its = []
             for i in ENTITY_IDS:
-                new_states.append(await client.async_get_state(entity_id=i))
+                new_states.append(client.get_state(entity_id=i))
 
                 # WEATHER
                 if i.startswith("weather"):
-                    weather = await client.async_get_domain("weather")
+                    weather = client.get_domain("weather")
                     changed_states, data = await weather.get_forecasts(
                         entity_id=i,
                         type="daily",
@@ -136,7 +136,7 @@ async def fetch_data():
                 # additional data fetching depending on the
                 # type of entity
                 # if(i.startswith("todo")):
-                #     todo = await client.async_get_domain("todo")
+                #     todo = client.get_domain("todo")
                 #     changed_states, data = await todo.get_items(entity_id=i)
                 #     new_post_its.append(data)
 
