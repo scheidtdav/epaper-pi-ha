@@ -146,10 +146,10 @@ async def fetch_data():
 
                 # additional data fetching depending on the
                 # type of entity
-                if(i.startswith("todo")):
-                    todo = await client.async_get_domain("todo")
-                    changed_states, data = await todo.get_items(entity_id=i)
-                    new_post_its.append(data)
+                # if(i.startswith("todo")):
+                #     todo = await client.async_get_domain("todo")
+                #     changed_states, data = await todo.get_items(entity_id=i)
+                #     new_post_its.append(data)
 
             global ENTITY_STATES, POST_ITS
             ENTITY_STATES = new_states
