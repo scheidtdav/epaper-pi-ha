@@ -21,7 +21,7 @@ ICON_MAP = {
 }
 
 
-def handle_weather(weather_entity, draw, font, color):
+def handle_weather(weather_entity, forecast, draw, font, small_font, color):
     weather_icon = ICON_MAP[weather_entity.state]
     draw.text(
         (2, 2),
@@ -33,9 +33,14 @@ def handle_weather(weather_entity, draw, font, color):
     temperature = weather_entity.attributes.get("temperature", "?")
     temp_unit = weather_entity.attributes.get("temperature_unit", "?")
     temp_string = f"{temperature}{temp_unit}"
+    text_bbox = draw.textbbox((36 + 9, 7), temp_string, font)
     draw.text(
         (36 + 9, 7),
         temp_string,
         font=font,
         fill=color,
     )
+
+    if forecast:
+        print(forecast)
+        draw.text((text_bbox[2], 0), "hello", font=small_font, fill=color)

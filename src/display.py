@@ -44,6 +44,7 @@ DATA_UPDATE_TIMEOUT = 40
 BUTTON_UPDATE_TIMEOUT = 0.05
 
 ENTITY_STATES = []
+WEATHER_FORECAST = {}
 POST_ITS = []
 
 
@@ -76,20 +77,27 @@ async def update_display():
                 # WEATHER
                 if entity.entity_id.startswith("weather"):
                     weather_entity = ENTITY_STATES[0]
-                    handle_weather(weather_entity, draw, large_font, BLACK)
+                    handle_weather(
+                        weather_entity,
+                        WEATHER_FORECAST,
+                        draw,
+                        large_font,
+                        small_font,
+                        BLACK,
+                    )
 
                 # "POST ITs"
-                if entity.entity_id.startswith("todo"):
-                    post_it_entity = ENTITY_STATES[2]
-                    post_it_context = POST_ITS[0]
-                    handle_post_its(
-                        post_it_entity,
-                        post_it_context,
-                        draw,
-                        WHITE,
-                        BLACK,
-                        regular_font,
-                    )
+                # if entity.entity_id.startswith("todo"):
+                #     post_it_entity = ENTITY_STATES[2]
+                #     post_it_context = POST_ITS[0]
+                #     handle_post_its(
+                #         post_it_entity,
+                #         post_it_context,
+                #         draw,
+                #         WHITE,
+                #         BLACK,
+                #         regular_font,
+                #     )
 
         display.image(image)
         display.display()
@@ -115,6 +123,15 @@ async def fetch_data():
             new_post_its = []
             for i in ENTITY_IDS:
                 new_states.append(await client.async_get_state(entity_id=i))
+
+                # WEATHER
+                if i.startswith("weather"):
+                    weather = await client.async_get_domain("weather")
+                    changed_states, data = await weather.get_forecasts(
+                        entity_id=i,
+                        type="daily",
+                    )
+                    WEATHER_FORECAST = data
 
                 # additional data fetching depending on the
                 # type of entity
