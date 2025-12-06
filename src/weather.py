@@ -1,4 +1,6 @@
-from display import icon_font, large_font, BLACK
+from PIL import ImageFont
+
+icon_font = ImageFont.truetype("./meteocons.ttf", 36)
 
 ICON_MAP = {
     "clear-night": "C",
@@ -19,13 +21,13 @@ ICON_MAP = {
 }
 
 
-def handle_weather(weather_entity, draw):
+def handle_weather(weather_entity, draw, font, color):
     weather_icon = ICON_MAP[weather_entity.state]
     draw.text(
         (2, 2),
         weather_icon,
         font=icon_font,
-        fill=BLACK,
+        fill=color,
     )
 
     temperature = weather_entity.attributes.get("temperature", "?")
@@ -34,6 +36,6 @@ def handle_weather(weather_entity, draw):
     draw.text(
         (36 + 9, 7),
         temp_string,
-        font=large_font,
-        fill=BLACK,
+        font=font,
+        fill=color,
     )

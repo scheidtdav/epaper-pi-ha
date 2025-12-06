@@ -76,13 +76,20 @@ async def update_display():
                 # WEATHER
                 if entity.entity_id.startswith("weather"):
                     weather_entity = ENTITY_STATES[0]
-                    handle_weather(weather_entity, draw)
+                    handle_weather(weather_entity, draw, large_font, BLACK)
 
                 # "POST ITs"
                 if entity.entity_id.startswith("todo"):
                     post_it_entity = ENTITY_STATES[2]
                     post_it_context = POST_ITS[0]
-                    handle_post_its(post_it_entity, post_it_context, draw)
+                    handle_post_its(
+                        post_it_entity,
+                        post_it_context,
+                        draw,
+                        WHITE,
+                        BLACK,
+                        regular_font,
+                    )
 
         display.image(image)
         display.display()
