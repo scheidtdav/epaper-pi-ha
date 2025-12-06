@@ -29,6 +29,7 @@ sudo apt-get install python3-pil
 pip install HomeAssistant-API
 from PIL import Image, ImageDraw, ImageFont
 sudo apt install fonts-dejavu-core 
+install git clone repo
 
 ## Configuration
 
