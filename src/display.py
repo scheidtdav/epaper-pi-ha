@@ -10,8 +10,8 @@ from homeassistant_api import Client
 from dotenv import load_dotenv
 from PIL import Image, ImageDraw, ImageFont
 
-from post_its import handle_post_its
-from weather import handle_weather
+from .post_its import handle_post_its
+from .weather import handle_weather
 
 # ----------------------------------------------------------
 # Setup
