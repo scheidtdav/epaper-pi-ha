@@ -82,41 +82,44 @@ async def update_display():
 
         if len(ENTITY_STATES) == 0:
             draw.text(
-                (1, 1), "Hier gibt es (noch) nix zu sehen.", font=small_font, fill=BLACK
+                (1, 1), "Loading states, please wait...", font=small_font, fill=BLACK
 	    )
         else:
-            # WEATHER
-            weather_entity = ENTITY_STATES[0]
-            weather_icon = ICON_MAP[weather_entity.state]
-            draw.text(
-                (2, 2),
-                weather_icon,
-                font=icon_font,
-                fill=BLACK,
-            )
+            for entity in ENTITY_STATES:
+                if entity.name.startswith("weather"):
+                    # WEATHER
+                    weather_entity = ENTITY_STATES[0]
+                    weather_icon = ICON_MAP[weather_entity.state]
+                    draw.text(
+                        (2, 2),
+                        weather_icon,
+                        font=icon_font,
+                        fill=BLACK,
+                    )
 
-            temperature = weather_entity.attributes.get('temperature', '?')
-            temp_unit = weather_entity.attributes.get('temperature_unit', '?')
-            temp_string = f"{temperature}{temp_unit}"
-            draw.text(
-                (36 + 9, 7),
-                temp_string,
-                font=large_font,
-                fill=BLACK,
-            )
+                    temperature = weather_entity.attributes.get('temperature', '?')
+                    temp_unit = weather_entity.attributes.get('temperature_unit', '?')
+                    temp_string = f"{temperature}{temp_unit}"
+                    draw.text(
+                        (36 + 9, 7),
+                        temp_string,
+                        font=large_font,
+                        fill=BLACK,
+                    )
 
-            # POST IT
-            post_it_entity = ENTITY_STATES[2]
-            if int(post_it_entity.state) > 0:
-                post_it_text = POST_ITS[0].get('todo.post_it').get('items')[0].get('summary')
-                print(post_it_text)
-                draw.rectangle([(0, 122-32), (250, 122)], BLACK)
-                draw.text(
-                    (1, 122 - 32 + 6),
-                    post_it_text,
-                    font=regular_font,
-                    fill=WHITE,
-                )
+                if entity.name.startswith("todo"):
+                    # "POST ITs"
+                    post_it_entity = ENTITY_STATES[2]
+                    if int(post_it_entity.state) > 0:
+                        post_it_text = POST_ITS[0].get('todo.post_it').get('items')[0].get('summary')
+                        print(post_it_text)
+                        draw.rectangle([(0, 122-32), (250, 122)], BLACK)
+                        draw.text(
+                            (1, 122 - 32 + 6),
+                            post_it_text,
+                            font=regular_font,
+                            fill=WHITE,
+                        )
 
         display.image(image)
         display.display()
