@@ -20,6 +20,9 @@ ICON_MAP = {
     "exceptional": "D",
 }
 
+def render(json):
+    return
+
 
 def handle_weather(weather_entity, forecast, draw, font, small_font, color):
     weather_icon = ICON_MAP[weather_entity.state]

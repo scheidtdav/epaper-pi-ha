@@ -22,10 +22,7 @@ dc = digitalio.DigitalInOut(board.D22)
 rst = digitalio.DigitalInOut(board.D27)
 busy = digitalio.DigitalInOut(board.D17)
 srcs = None
-up_button = digitalio.DigitalInOut(board.D5)
-up_button.switch_to_input()
-down_button = digitalio.DigitalInOut(board.D6)
-down_button.switch_to_input()
+
 display = Adafruit_SSD1675(
     122, 250, spi, cs_pin=ecs, dc_pin=dc, sramcs_pin=srcs, rst_pin=rst, busy_pin=busy
 )
@@ -41,7 +38,7 @@ BLACK = (0, 0, 0)
 
 DISPLAY_UPDATE_TIMEOUT = 300  # you should not update more often than every 5 mins
 DATA_UPDATE_TIMEOUT = 40
-BUTTON_UPDATE_TIMEOUT = 0.05
+
 
 ENTITY_STATES = []
 WEATHER_FORECAST = {}
@@ -105,15 +102,7 @@ async def update_display():
         await asyncio.sleep(DISPLAY_UPDATE_TIMEOUT)
 
 
-async def handle_buttons():
-    while True:
-        if button_pressed(up_button):
-            print("up")
 
-        if button_pressed(down_button):
-            print("down")
-
-        await asyncio.sleep(BUTTON_UPDATE_TIMEOUT)
 
 
 async def fetch_data():
