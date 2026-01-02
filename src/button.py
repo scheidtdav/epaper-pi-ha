@@ -2,23 +2,42 @@ import asyncio
 import digitalio
 import board
 
+class Button:
 
-BUTTON_UPDATE_TIMEOUT = 0.05
+    BUTTON_UPDATE_TIMEOUT = 0.05
+    _buttons = {}
 
-up_button = digitalio.DigitalInOut(board.D5)
-up_button.switch_to_input()
-down_button = digitalio.DigitalInOut(board.D6)
-down_button.switch_to_input()
+    def __init__(self, display, config):
+        # read config
+        for pin, action in config:
+            button = digitalio.DigitalInOut(pin)
+            board.switch_to_input()
+            self._buttons[button] = action
 
-def button_pressed(button):
-    return not button.value
+        self._display = display
 
-async def handle_buttons():
-    while True:
-        if button_pressed(up_button):
-            print("up")
+    up_button = digitalio.DigitalInOut(board.D5)
+    up_button.switch_to_input()
+    down_button = digitalio.DigitalInOut(board.D6)
+    down_button.switch_to_input()
 
-        if button_pressed(down_button):
-            print("down")
+    def button_pressed(button) ->bool:
+        return not button.value
 
-        await asyncio.sleep(BUTTON_UPDATE_TIMEOUT)
+    async def handle_buttons(self) -> None:
+        while True:
+            for button, action in self._buttons:
+                if self.button_pressed(button):
+                    match action:
+                        case "next":
+                            self.handle_next()
+                        case "action":
+                            self.handle_action()
+            await asyncio.sleep(self.BUTTON_UPDATE_TIMEOUT)
+
+    async def handle_next(self) -> None:
+        self._display.itterate_view()
+        
+
+    async def handle_action(self) -> None:
+        self._display.get_current_view.handle_action()
