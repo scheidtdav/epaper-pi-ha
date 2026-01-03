@@ -1,7 +1,7 @@
 import asyncio
 import digitalio
 import board
-import src.display as display
+from display import Display
 
 
 class Button:
@@ -11,7 +11,7 @@ class Button:
     def __init__(
         self,
         config,
-        display: display.Display,
+        display: Display,
     ):
         self._display = display
 
