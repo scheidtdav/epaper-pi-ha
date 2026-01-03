@@ -1,4 +1,5 @@
 from PIL import ImageFont
+from jinja2 import Environment, FileSystemLoader
 
 icon_font = ImageFont.truetype("./meteocons.ttf", 36)
 
@@ -20,11 +21,27 @@ ICON_MAP = {
     "exceptional": "D",
 }
 
-def render(json):
-    return
+class WeatherComponent:
+    def __init__(self, entity_id):
+        self.entity_id = entity_id
+        self.entity = None
+        self.weather_domain = None
+        self.forecast = None
 
+    def fetch_data(self, client):
+        self.entity = client.get_state(entity_id=self.entity_id)
+        self.weather_domain = client.get_domain("weather")
+        _, data = self.weather_domain.get_forecasts(
+            entity_id=self.entity_id,
+            type="daily",
+        )
+        self.forecast = data
+    
+    async def render(self):
 
-def handle_weather(weather_entity, forecast, draw, font, small_font, color):
+        pass
+
+def render(weather_entity, forecast, draw, font, small_font, color):
     weather_icon = ICON_MAP[weather_entity.state]
     draw.text(
         (2, 2),
