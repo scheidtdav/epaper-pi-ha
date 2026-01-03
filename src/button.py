@@ -1,6 +1,7 @@
 import asyncio
 import digitalio
 import board
+import display
 
 class Button:
 
@@ -14,12 +15,7 @@ class Button:
             board.switch_to_input()
             self._buttons[button] = action
 
-        self._display = display
-
-    up_button = digitalio.DigitalInOut(board.D5)
-    up_button.switch_to_input()
-    down_button = digitalio.DigitalInOut(board.D6)
-    down_button.switch_to_input()
+        self._display: display.Display = display
 
     def button_pressed(button) ->bool:
         return not button.value
