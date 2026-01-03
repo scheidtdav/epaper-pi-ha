@@ -45,8 +45,8 @@ async def main():
     print("ENTITY_IDS: " + str(entities))
 
     display_dimensions = (
-        config["display"]["width_in_pixel"],
         config["display"]["height_in_pixel"],
+        config["display"]["width_in_pixel"],
     )
 
     entities = init_entities(
