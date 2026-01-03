@@ -1,16 +1,10 @@
 import asyncio
 import tomllib
 from homeassistant_api import WebsocketClient
-from PIL import ImageFont
 
 from src.button import Button
 from src.components.weather import Weather
 from src.display import Display
-
-icon_font = ImageFont.truetype("./meteocons.ttf", 36)
-small_font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", 14)
-regular_font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", 18)
-large_font = ImageFont.truetype("/usr/share/fonts/truetyoe/dejavu/DejaVuSans.ttf", 24)
 
 
 async def fetch_data(ha_config, entities):
