@@ -37,9 +37,10 @@ class Display:
 
     def cycle(self):
         next = True
+        print("called cycle")
         next_index = self._current_entity_index
         while next:
-            next_index = self._current_entity_index + 1 % len(self._entities)
+            next_index = (self._current_entity_index + 1) % len(self._entities)
             next_entity = self._entities[next_index]
             next = not next_entity.has_content()
 
