@@ -4,6 +4,7 @@ import busio
 import board
 import os
 import json
+import tomllib
 from adafruit_epd.epd import Adafruit_EPD
 from adafruit_epd.ssd1675 import Adafruit_SSD1675
 from homeassistant_api import WebsocketClient
@@ -138,8 +139,12 @@ async def fetch_data():
 # ----------------------------------------------------------
 # Initial setup
 # ----------------------------------------------------------
-load_dotenv()
-HA_URL = os.getenv("HA_URL")
+with open("config.toml", "rb") as f:
+    config = tomllib.load(f)
+
+print(config)
+
+HA_URL =  os.getenv("HA_URL")
 HA_TOKEN = os.getenv("HA_TOKEN")
 ENTITY_IDS = json.loads(os.getenv("ENTITY_IDS"))
 
