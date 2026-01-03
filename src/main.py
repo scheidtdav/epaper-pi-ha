@@ -12,6 +12,7 @@ from dotenv import load_dotenv
 from PIL import Image, ImageDraw, ImageFont
 
 from post_its import handle_post_its
+from src.button import Button
 from weather import handle_weather
 
 # ----------------------------------------------------------
@@ -135,29 +136,28 @@ async def fetch_data():
             POST_ITS = new_post_its
             await asyncio.sleep(DATA_UPDATE_TIMEOUT)
 
-
-# ----------------------------------------------------------
-# Initial setup
-# ----------------------------------------------------------
-with open("config.toml", "rb") as f:
-    config = tomllib.load(f)
-
-print(config)
-
-HA_URL =  os.getenv("HA_URL")
-HA_TOKEN = os.getenv("HA_TOKEN")
-ENTITY_IDS = json.loads(os.getenv("ENTITY_IDS"))
-
-
 # ----------------------------------------------------------
 # Program
 # ----------------------------------------------------------
 async def main():
-    print("Starting!")
-    print("HA_URL: " + HA_URL)
-    print("ENTITY_IDS: " + str(ENTITY_IDS))
+    try:
+        with open("config.toml", "rb") as f:
+            config = tomllib.load(f)
+    except Exception as e:
+        print("Could not work out the configuration, exiting.", e)
+        return 1
 
-    await asyncio.gather(update_display(), handle_buttons(), fetch_data())
+    ha_url = config["home_assistant"]["url"]
+    entities = config["home_assistant"]["entities"]
+
+    print("Starting!")
+    print("HA_URL: " + ha_url)
+    print("ENTITY_IDS: " + str(entities))
+
+    button = Button(config["buttons"])
+    # add function for init entities
+
+    await asyncio.gather(update_display(), button.handle_buttons(), fetch_data())
 
 
 if __name__ == "__main__":
