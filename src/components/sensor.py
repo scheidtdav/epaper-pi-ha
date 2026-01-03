@@ -31,7 +31,7 @@ class Sensor(BaseComponent):
 
         draw.text(
             (0, 0),
-            f"{self.entity.get('attributes').get('friendly_name')}",
+            f"{self.entity.attributes.get('friendly_name', self._entity_id)}",
             font=self.regular_font,
             fill=self.BLACK,
         )
