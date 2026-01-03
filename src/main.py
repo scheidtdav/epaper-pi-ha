@@ -5,6 +5,7 @@ from homeassistant_api import WebsocketClient
 from button import Button
 from components.weather import Weather
 from components.todo import Todo
+from components.sensor import Sensor
 from display import Display
 
 
@@ -24,6 +25,8 @@ def init_entities(ha_config, display_dimensions):
                 entities.append(Weather(i, display_dimensions))
             case i if i.startswith("todo."):
                 entities.append(Todo(i, display_dimensions))
+            case i if i.startswith("sensor."):
+                entities.append(Sensor(i, display_dimensions))
             case _:
                 print(f"No idea what to do with entity id '{i}', skipping.")
     return entities
