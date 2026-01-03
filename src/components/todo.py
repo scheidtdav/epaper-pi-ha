@@ -3,8 +3,8 @@ from components.base_component import BaseComponent
 
 
 class Todo(BaseComponent):
-    def __init__(self, entity_id):
-        super().__init__(entity_id)
+    def __init__(self, entity_id, display_dimensions):
+        super().__init__(entity_id, display_dimensions)
         self.entity = None
         self.todo_domain = None
         self.todos = []

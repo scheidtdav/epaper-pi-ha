@@ -23,8 +23,8 @@ ICON_MAP = {
 
 
 class Weather(BaseComponent):
-    def __init__(self, entity_id):
-        super().__init__(entity_id)
+    def __init__(self, entity_id, display_dimensions):
+        super().__init__(entity_id, display_dimensions)
         self.entity = None
         self.weather_domain = None
         self.forecast = None

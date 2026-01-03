@@ -16,14 +16,14 @@ async def fetch_data(ha_config, entities):
             await asyncio.sleep(ha_config["update_timeout"])
 
 
-def init_entities(ha_config):
+def init_entities(ha_config, display_dimensions):
     entities = []
     for id in ha_config["entities"]:
         match id:
             case i if i.startswith("weather."):
-                entities.append(Weather(i))
+                entities.append(Weather(i, display_dimensions))
             case i if i.startswith("todo."):
-                entities.append(Todo(i))
+                entities.append(Todo(i, display_dimensions))
             case _:
                 print(f"No idea what to do with entity id '{i}', skipping.")
     return entities
@@ -44,7 +44,15 @@ async def main():
     print("HA_URL: " + ha_url)
     print("ENTITY_IDS: " + str(entities))
 
-    entities = init_entities(config["home_assistant"])
+    display_dimensions = (
+        config["display"]["width_in_pixel"],
+        config["display"]["height_in_pixel"],
+    )
+
+    entities = init_entities(
+        config["home_assistant"],
+        display_dimensions,
+    )
     display = Display(config["display"], entities)
     buttons = Button(config["buttons"], display)
 
