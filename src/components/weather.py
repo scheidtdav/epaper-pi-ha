@@ -21,7 +21,8 @@ ICON_MAP = {
     "exceptional": "D",
 }
 
-class WeatherComponent:
+
+class Weather:
     def __init__(self, entity_id):
         self.entity_id = entity_id
         self.entity = None
@@ -36,10 +37,10 @@ class WeatherComponent:
             type="daily",
         )
         self.forecast = data
-    
-    async def render(self):
 
+    async def render(self):
         pass
+
 
 def render(weather_entity, forecast, draw, font, small_font, color):
     weather_icon = ICON_MAP[weather_entity.state]

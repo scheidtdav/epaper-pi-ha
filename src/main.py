@@ -1,144 +1,39 @@
 import asyncio
-import digitalio
-import busio
-import board
-import os
-import json
 import tomllib
-from adafruit_epd.epd import Adafruit_EPD
-from adafruit_epd.ssd1675 import Adafruit_SSD1675
 from homeassistant_api import WebsocketClient
-from dotenv import load_dotenv
-from PIL import Image, ImageDraw, ImageFont
+from PIL import ImageFont
 
-from post_its import handle_post_its
 from src.button import Button
-from weather import handle_weather
-
-# ----------------------------------------------------------
-# Setup
-# ----------------------------------------------------------
-spi = busio.SPI(board.SCK, MOSI=board.MOSI, MISO=board.MISO)
-ecs = digitalio.DigitalInOut(board.CE0)
-dc = digitalio.DigitalInOut(board.D22)
-rst = digitalio.DigitalInOut(board.D27)
-busy = digitalio.DigitalInOut(board.D17)
-srcs = None
-
-display = Adafruit_SSD1675(
-    122, 250, spi, cs_pin=ecs, dc_pin=dc, sramcs_pin=srcs, rst_pin=rst, busy_pin=busy
-)
-display.rotation = 1
+from src.components.weather import Weather
+from src.display import Display
 
 icon_font = ImageFont.truetype("./meteocons.ttf", 36)
 small_font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", 14)
 regular_font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", 18)
 large_font = ImageFont.truetype("/usr/share/fonts/truetyoe/dejavu/DejaVuSans.ttf", 24)
 
-WHITE = (255, 255, 255)
-BLACK = (0, 0, 0)
 
-DISPLAY_UPDATE_TIMEOUT = 300  # you should not update more often than every 5 mins
-DATA_UPDATE_TIMEOUT = 40
-
-
-ENTITY_STATES = []
-WEATHER_FORECAST = {}
-POST_ITS = []
-
-
-# ----------------------------------------------------------
-# Utility functions
-# ----------------------------------------------------------
-def button_pressed(btn):
-    """Checks whether the given button is pressed or not."""
-    # Since buttons are pulled low when pressed,
-    # their value is False when pressed
-    if not btn.value:
-        return True
-
-
-async def update_display():
-    while True:
-        print(ENTITY_STATES)
-        print(POST_ITS)
-
-        image = Image.new("RGB", (display.width, display.height), color=WHITE)
-        draw = ImageDraw.Draw(image)
-        display.fill(Adafruit_EPD.WHITE)
-
-        if len(ENTITY_STATES) == 0:
-            draw.text(
-                (1, 1), "Loading states, please wait...", font=small_font, fill=BLACK
-            )
-        else:
-            for entity in ENTITY_STATES:
-                # WEATHER
-                if entity.entity_id.startswith("weather"):
-                    weather_entity = ENTITY_STATES[0]
-                    handle_weather(
-                        weather_entity,
-                        WEATHER_FORECAST,
-                        draw,
-                        large_font,
-                        small_font,
-                        BLACK,
-                    )
-
-                # "POST ITs"
-                # if entity.entity_id.startswith("todo"):
-                #     post_it_entity = ENTITY_STATES[2]
-                #     post_it_context = POST_ITS[0]
-                #     handle_post_its(
-                #         post_it_entity,
-                #         post_it_context,
-                #         draw,
-                #         WHITE,
-                #         BLACK,
-                #         regular_font,
-                #     )
-
-        display.image(image)
-        display.display()
-
-        await asyncio.sleep(DISPLAY_UPDATE_TIMEOUT)
-
-
-
-
-
-async def fetch_data():
-    with WebsocketClient(HA_URL, HA_TOKEN) as client:
+async def fetch_data(ha_config, entities):
+    with WebsocketClient(ha_config["url"], ha_config["token"]) as client:
         while True:
-            global ENTITY_STATES, POST_ITS, WEATHER_FORECAST
-            new_states = []
-            new_post_its = []
-            for i in ENTITY_IDS:
-                new_states.append(client.get_state(entity_id=i))
+            for entity in entities:
+                entity.fetch_data(client)
+            await asyncio.sleep(ha_config["update_timeout"])
 
-                # WEATHER
-                if i.startswith("weather"):
-                    weather = client.get_domain("weather")
-                    changed_states, data = weather.get_forecasts(
-                        entity_id=i,
-                        type="daily",
-                    )
-                    WEATHER_FORECAST = data
 
-                # additional data fetching depending on the
-                # type of entity
-                # if(i.startswith("todo")):
-                #     todo = client.get_domain("todo")
-                #     changed_states, data = todo.get_items(entity_id=i)
-                #     new_post_its.append(data)
+def init_entities(ha_config):
+    entities = []
+    for id in ha_config["entities"]:
+        match id:
+            case i if i.startswith("weather."):
+                entities.append(Weather(i))
+            case i if i.startswith("todo."):
+                entities.append(Todo(i))
+            case _:
+                print(f"No idea what to do with entity id '{i}', skipping.")
+    return entities
 
-            ENTITY_STATES = new_states
-            POST_ITS = new_post_its
-            await asyncio.sleep(DATA_UPDATE_TIMEOUT)
 
-# ----------------------------------------------------------
-# Program
-# ----------------------------------------------------------
 async def main():
     try:
         with open("config.toml", "rb") as f:
@@ -154,10 +49,15 @@ async def main():
     print("HA_URL: " + ha_url)
     print("ENTITY_IDS: " + str(entities))
 
-    button = Button(config["buttons"])
-    # add function for init entities
+    entities = init_entities(config["home_assistant"])
+    display = Display(config["display"], entities)
+    buttons = Button(config["buttons"], display)
 
-    await asyncio.gather(update_display(), button.handle_buttons(), fetch_data())
+    await asyncio.gather(
+        display.update(),
+        buttons.handle_buttons(),
+        fetch_data(config["home_assistant"], entities),
+    )
 
 
 if __name__ == "__main__":

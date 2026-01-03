@@ -1,22 +1,16 @@
 [home_assistant]
 url = "ws://homeassistant.local:8123/api/websocket"
-ha_token = ""
+token = ""
 entities = []
+update_timeout = 30
 
 [display]
-
-[display.display]
 ecs_pin = "CE0"
 dc_pin = "D22"
 rst_pin = "D27"
 busy_pin = "D17"
 width_in_pixel = 122
 height_in_pixel = 250
-scale = "landscape"
-
-
-[display.views]
-
 
 [buttons]
 [buttons.D5]

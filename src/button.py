@@ -1,14 +1,18 @@
 import asyncio
 import digitalio
 import board
-import display
+import src.display as display
+
 
 class Button:
-
     BUTTON_UPDATE_TIMEOUT = 0.05
     _buttons = {}
 
-    def __init__(self, display, config):
+    def __init__(
+        self,
+        config,
+        display: display,
+    ):
         # read config
         for pin, action in config:
             button = digitalio.DigitalInOut(pin)
@@ -17,7 +21,7 @@ class Button:
 
         self._display: display.Display = display
 
-    def button_pressed(button) ->bool:
+    def button_pressed(button) -> bool:
         return not button.value
 
     async def handle_buttons(self) -> None:
@@ -33,7 +37,6 @@ class Button:
 
     async def handle_next(self) -> None:
         self._display.itterate_view()
-        
 
     async def handle_action(self) -> None:
         self._display.get_current_view.handle_action()
