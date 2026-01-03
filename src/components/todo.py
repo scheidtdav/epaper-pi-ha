@@ -11,13 +11,13 @@ class Todo(BaseComponent):
 
     def fetch_data(self, client):
         if not self.entity:
-            self.entity = client.get_state(entity_id=self.entity_id)
+            self.entity = client.get_state(entity_id=self._entity_id)
 
         if not self.todo_domain:
             self.todo_domain = client.get_domain("todo")
 
         _, data = self.todo_domain.get_items(
-            entity_id=self.entity_id,
+            entity_id=self._entity_id,
         )
 
         last_todos = self.todos
