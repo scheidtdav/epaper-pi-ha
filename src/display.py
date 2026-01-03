@@ -55,9 +55,11 @@ class Display:
         for i in range(self._current_entity_index):
             entity = self._entities[i]
             if not entity.has_changes():
+                print(f"no update for {entity._entity_id}")
                 continue
 
             if not entity.has_content():
+                print(f"no content for {entity._entity_id}")
                 continue
 
             image = entity.render()
