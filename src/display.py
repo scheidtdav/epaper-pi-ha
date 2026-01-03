@@ -2,6 +2,7 @@ import asyncio
 import digitalio
 import busio
 import board
+import gpio
 from adafruit_epd.ssd1675 import Adafruit_SSD1675
 
 
@@ -14,10 +15,10 @@ class Display:
         self._entities = entities
 
         spi = busio.SPI(board.SCK, MOSI=board.MOSI, MISO=board.MISO)
-        ecs = digitalio.DigitalInOut(display_config["ecs_pin"])
-        dc = digitalio.DigitalInOut(display_config["dc_pin"])
-        rst = digitalio.DigitalInOut(display_config["rst_pin"])
-        busy = digitalio.DigitalInOut(display_config["busy_pin"])
+        ecs = digitalio.DigitalInOut(gpio.deserialize(display_config["ecs_pin"]))
+        dc = digitalio.DigitalInOut(gpio.deserialize(display_config["dc_pin"]))
+        rst = digitalio.DigitalInOut(gpio.deserialize(display_config["rst_pin"]))
+        busy = digitalio.DigitalInOut(gpio.deserialize(display_config["busy_pin"]))
         srcs = None
 
         self._display = Adafruit_SSD1675(

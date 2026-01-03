@@ -1,6 +1,7 @@
 import asyncio
 import digitalio
 import board
+import gpio
 from display import Display
 
 
@@ -17,12 +18,7 @@ class Button:
 
         # read config
         for pin, action in config:
-            try:
-                p = getattr(board, pin)
-            except AttributeError:
-                raise ValueError(f"Invalid pin name: {pin}")
-
-            button = digitalio.DigitalInOut(p)
+            button = digitalio.DigitalInOut(gpio.deserialize(pin))
             board.switch_to_input()
             self._buttons[button] = action
 
