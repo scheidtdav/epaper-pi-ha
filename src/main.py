@@ -2,9 +2,10 @@ import asyncio
 import tomllib
 from homeassistant_api import WebsocketClient
 
-from src.button import Button
-from src.components.weather import Weather
-from src.display import Display
+from button import Button
+from components.weather import Weather
+from components.todo import Todo
+from display import Display
 
 
 async def fetch_data(ha_config, entities):
