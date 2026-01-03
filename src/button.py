@@ -19,7 +19,7 @@ class Button:
         # read config
         for pin, action in config.items():
             button = digitalio.DigitalInOut(gpio.deserialize(pin))
-            board.switch_to_input()
+            pin.switch_to_input()
             self._buttons[button] = action
 
     def button_pressed(button) -> bool:
