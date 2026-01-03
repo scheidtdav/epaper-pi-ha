@@ -26,7 +26,7 @@ class Button:
 
     async def handle_buttons(self) -> None:
         while True:
-            for button, action in self._buttons:
+            for button, action in self._buttons.items():
                 if self.button_pressed(button):
                     match action:
                         case "cycle":
