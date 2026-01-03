@@ -1,5 +1,5 @@
 from PIL import ImageDraw
-from base_component import BaseComponent
+from components.base_component import BaseComponent
 
 
 class Todo(BaseComponent):

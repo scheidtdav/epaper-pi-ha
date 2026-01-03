@@ -1,5 +1,5 @@
 from PIL import ImageFont, ImageDraw
-from base_component import BaseComponent
+from components.base_component import BaseComponent
 
 icon_font = ImageFont.truetype("./meteocons.ttf", 36)
 
