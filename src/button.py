@@ -40,4 +40,4 @@ class Button:
         self._display.cycle()
 
     def handle_action(self) -> None:
-        self._display.get_current_entity.handle_action()
+        self._display.get_current_entity().handle_action()
