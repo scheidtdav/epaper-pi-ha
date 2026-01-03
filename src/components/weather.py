@@ -31,13 +31,13 @@ class Weather(BaseComponent):
 
     def fetch_data(self, client):
         if not self.entity:
-            self.entity = client.get_state(entity_id=self.entity_id)
+            self.entity = client.get_state(entity_id=self._entity_id)
 
         if not self.weather_domain:
             self.weather_domain = client.get_domain("weather")
 
         _, data = self.weather_domain.get_forecasts(
-            entity_id=self.entity_id,
+            entity_id=self._entity_id,
             type="daily",
         )
 
