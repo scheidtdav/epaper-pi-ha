@@ -60,7 +60,7 @@ class Weather(BaseComponent):
             )
             return img
 
-        weather_icon = ICON_MAP[self.weather_entity.state]
+        weather_icon = ICON_MAP[self.entity.state]
         draw.text(
             (2, 2),
             weather_icon,
@@ -68,8 +68,8 @@ class Weather(BaseComponent):
             fill=self.BLACK,
         )
 
-        temperature = self.weather_entity.attributes.get("temperature", "?")
-        temp_unit = self.weather_entity.attributes.get("temperature_unit", "?")
+        temperature = self.entity.attributes.get("temperature", "?")
+        temp_unit = self.entity.attributes.get("temperature_unit", "?")
         temp_string = f"{temperature}{temp_unit}"
         text_bbox = draw.textbbox((36 + 9, 7), temp_string, self.regular_font)
         draw.text(
