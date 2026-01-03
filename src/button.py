@@ -17,7 +17,7 @@ class Button:
         self._display = display
 
         # read config
-        for pin, action in config:
+        for pin, action in config.items():
             button = digitalio.DigitalInOut(gpio.deserialize(pin))
             board.switch_to_input()
             self._buttons[button] = action
