@@ -62,6 +62,7 @@ class Display:
                 print(f"no content for {entity._entity_id}")
                 continue
 
+            print(f"render component {entity._entity_id}")
             image = entity.render()
             self._display.image(image)
             self._display.display()
