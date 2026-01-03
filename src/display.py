@@ -52,6 +52,7 @@ class Display:
         return self._entities[self._current_entity_index]
 
     def __update__(self):
+        print("__update__")
         for i in range(self._current_entity_index):
             entity = self._entities[i]
             if not entity.has_changes():
