@@ -21,7 +21,8 @@ class Todo(BaseComponent):
         )
 
         last_todos = self.todos
-        self.todos = data
+        self.todos = data.get(self._entity_id)
+        print(data)
 
         self._has_changes = self.todos != last_todos
         self._has_content = True if self.todos and int(self.entity.state) > 0 else False
