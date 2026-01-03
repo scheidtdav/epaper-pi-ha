@@ -14,14 +14,15 @@ class Display:
         # init display
         displayConfig = config["display"]
         spi = busio.SPI(displayConfig.SCK, MOSI=displayConfig.MOSI, MISO=displayConfig.MISO)
-        ecs = digitalio.DigitalInOut(displayConfig.CE0)
-        dc = digitalio.DigitalInOut(displayConfig.D22)
-        rst = digitalio.DigitalInOut(displayConfig.D27)
-        busy = digitalio.DigitalInOut(displayConfig.D17)
+        ecs = digitalio.DigitalInOut(displayConfig.ecs_pin)
+        dc = digitalio.DigitalInOut(displayConfig.dc_pin)
+        rst = digitalio.DigitalInOut(displayConfig.rst_pin)
+        busy = digitalio.DigitalInOut(displayConfig.busy_pin)
         srcs = None
 
-        self._display = Adafruit_SSD1675(122, 250, spi, cs_pin=ecs, dc_pin=dc, sramcs_pin=srcs, rst_pin=rst, busy_pin=busy)
-        self._display.rotation = 1
+        self._display = Adafruit_SSD1675(displayConfig.width_in_pixel, displayConfig.height_in_pixel, spi, cs_pin=ecs, dc_pin=dc, sramcs_pin=srcs, rst_pin=rst, busy_pin=busy)
+        if displayConfig.scale == "landscape":
+            self._display.rotation = 1
 
         for view in config["views"]:
             #ToDo init/deserialize view
@@ -36,7 +37,7 @@ class Display:
     def get_current_view(self):
         return self._views[self.get_current_view]
     
-    
+
 
     def update(self):
         self._display.fill(Adafruit_EPD.WHITE)
