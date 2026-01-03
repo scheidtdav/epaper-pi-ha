@@ -21,7 +21,7 @@ class Button:
             button.switch_to_input()
             self._buttons[button] = action
 
-    def button_pressed(button) -> bool:
+    def button_pressed(self, button) -> bool:
         return not button.value
 
     async def handle_buttons(self) -> None:
