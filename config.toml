@@ -16,3 +16,8 @@ scale="landscape"
 
 
 [buttons]
+[buttons.D5]
+action="action"
+
+[buttons.D6]
+action="cycle"
