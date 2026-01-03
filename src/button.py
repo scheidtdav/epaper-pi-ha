@@ -1,6 +1,5 @@
 import asyncio
 import digitalio
-import board
 import gpio
 from display import Display
 

@@ -9,7 +9,7 @@ from adafruit_epd.ssd1675 import Adafruit_SSD1675
 class Display:
     DISPLAY_UPDATE_TIMEOUT = 300  # you should not update more often than every 5 mins
     _entities = []
-    _current_view_id = 0
+    _current_entity_index = 0
 
     def __init__(self, display_config, entities):
         self._entities = entities
