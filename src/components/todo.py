@@ -39,7 +39,7 @@ class Todo(BaseComponent):
             )
             return img
 
-        post_it_text = self.entity.get("items")[0].get("summary")
+        post_it_text = self.todos.get("items")[0].get("summary")
         print(post_it_text)
         draw.rectangle([(0, 122 - 32), (250, 122)], self.BLACK)
         draw.text(
