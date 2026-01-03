@@ -36,8 +36,8 @@ class Button:
                     print(f"Button pressed: {action}")
             await asyncio.sleep(self.BUTTON_UPDATE_TIMEOUT)
 
-    async def handle_cycle(self) -> None:
+    def handle_cycle(self) -> None:
         self._display.cycle()
 
-    async def handle_action(self) -> None:
+    def handle_action(self) -> None:
         self._display.get_current_entity.handle_action()

@@ -54,7 +54,7 @@ class Display:
 
     def __update__(self):
         print("__update__")
-        for i in range(self._current_entity_index):
+        for i in range(self._current_entity_index + 1):
             entity = self._entities[i]
             if not entity.has_changes():
                 print(f"no update for {entity._entity_id}")
