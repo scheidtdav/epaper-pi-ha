@@ -8,6 +8,7 @@ class Todo(BaseComponent):
         self.entity = None
         self.todo_domain = None
         self.todos = []
+        self._background_color = self.BLACK
 
     def fetch_data(self, client):
         if not self.entity:
@@ -22,7 +23,6 @@ class Todo(BaseComponent):
 
         last_todos = self.todos
         self.todos = data.get(self._entity_id)
-        print(data)
 
         self._has_changes = self.todos != last_todos
         self._has_content = True if self.todos and int(self.entity.state) > 0 else False
@@ -36,19 +36,30 @@ class Todo(BaseComponent):
                 (0, 0),
                 f"No content for entity id '{self._entity_id}'",
                 font=self.regular_font,
-                fill=self.BLACK,
+                fill=self.WHITE,
             )
             return img
 
-        draw.text((0, 122 // 2), "!", self.WHITE, self.large_font, "mm")
+        draw.text((2, self._dimensions[1] // 2), "!", self.WHITE, self.huge_font, "lm")
 
-        # post_it_text = self.todos.get("items")[0].get("summary")
-        # draw.rectangle([(0, 122 - 32), (250, 122)], self.BLACK)
-        # draw.text(
-        #     (1, 122 - 32 + 6),
-        #     post_it_text,
-        #     font=self.large_font,
-        #     fill=self.WHITE,
-        # )
+        todo_items = self.todos.get("items")
+        unchecked_todos = [t for t in todo_items if t.get("status") == "needs_action"]
+        if len(unchecked_todos) == 0:
+            return img
+
+        # we only support showing the first entry thats not checked
+        post_it_text = unchecked_todos[0].get("summary")
+        draw.text(
+            (32, self._dimensions[1] // 2),
+            self.multiline_text(
+                draw,
+                self.regular_font,
+                post_it_text,
+                self._dimensions[0] - 32,
+            ),
+            self.WHITE,
+            self.regular_font,
+            "lm",
+        )
 
         return img
