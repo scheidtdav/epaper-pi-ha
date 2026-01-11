@@ -40,14 +40,15 @@ class Todo(BaseComponent):
             )
             return img
 
-        post_it_text = self.todos.get("items")[0].get("summary")
-        print(post_it_text)
-        draw.rectangle([(0, 122 - 32), (250, 122)], self.BLACK)
-        draw.text(
-            (1, 122 - 32 + 6),
-            post_it_text,
-            font=self.large_font,
-            fill=self.WHITE,
-        )
+        draw.text((0, 122 // 2), "!", self.WHITE, self.large_font, "mm")
+
+        # post_it_text = self.todos.get("items")[0].get("summary")
+        # draw.rectangle([(0, 122 - 32), (250, 122)], self.BLACK)
+        # draw.text(
+        #     (1, 122 - 32 + 6),
+        #     post_it_text,
+        #     font=self.large_font,
+        #     fill=self.WHITE,
+        # )
 
         return img
