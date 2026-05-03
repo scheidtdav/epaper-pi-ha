@@ -1,4 +1,4 @@
-from PIL import Image, ImageFont, ImageDraw
+from PIL import Image, ImageDraw, ImageFont
 
 
 class BaseComponent:
@@ -12,10 +12,10 @@ class BaseComponent:
         "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", 18
     )
     large_font = ImageFont.truetype(
-        "/usr/share/fonts/truetyoe/dejavu/DejaVuSans.ttf", 24
+        "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", 24
     )
     huge_font = ImageFont.truetype(
-        "/usr/share/fonts/truetyoe/dejavu/DejaVuSans.ttf", 84
+        "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", 84
     )
 
     def __init__(self, entity_id, display_dimensions):
@@ -43,7 +43,7 @@ class BaseComponent:
         self, s: str, draw: ImageDraw.ImageDraw, font: ImageFont.ImageFont
     ) -> int:
         bbox = draw.textbbox((0, 0), s, font=font)
-        return bbox[2] - bbox[0]
+        return int(bbox[2] - bbox[0])
 
     def multiline_text(
         self,
