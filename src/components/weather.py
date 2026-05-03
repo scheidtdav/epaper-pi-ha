@@ -116,7 +116,7 @@ class Weather(BaseComponent):
             fc_temp = f"{fc_data.get('temperature', '?')}°C"
 
             # Calculate coordinates for this day's column
-            day_x = forecast_x_start + i * (forecast_col_width + 28)
+            day_x = forecast_x_start + i * (forecast_col_width + 24)
 
             # Draw Day Name (Top)
             draw.text(
