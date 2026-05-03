@@ -54,7 +54,6 @@ class Weather(BaseComponent):
         img = super().render()
         draw = ImageDraw.Draw(img)
 
-        # --- 1. Check for empty content ---
         if not self._has_content:
             draw.text(
                 (0, 0),
@@ -64,7 +63,6 @@ class Weather(BaseComponent):
             )
             return img
 
-        # --- 2. Draw Current Weather (Icon & Temp) ---
         current_icon = ICON_MAP.get(self.entity.state, "?")
 
         # Draw current weather icon (Top Left)
@@ -78,10 +76,6 @@ class Weather(BaseComponent):
         temperature = self.entity.attributes.get("temperature", "?")
         temp_unit = self.entity.attributes.get("temperature_unit", "?")
         temp_string = f"{temperature}{temp_unit}"
-
-        # Estimate bounding box for temperature text (Starting slightly right of icon)
-        # Approximate position: (Width needed + margin, Y_offset)
-        # Using a fixed safe offset for initial text placement
         temp_x_start = 50
         temp_y_start = 2
 
@@ -92,40 +86,36 @@ class Weather(BaseComponent):
             fill=self.BLACK,
         )
 
-        # --- 3. Draw Forecast (Next 3 days) ---
         if not self.forecast:
             return img
 
         # Define starting position for the forecast grid
-        FORECAST_START_Y = 20
-        FORECAST_X_START = 2
-        DAY_COL_WIDTH = 122 // 3 - 10  # Approx width for 3 days
+        forecast_y_start = 20
+        forecast_x_start = 2
+        forecast_col_width = 122 // 3 - 10  # Approx width for 3 days
 
         # Title
         draw.text(
-            (2, FORECAST_START_Y - 10),
+            (2, forecast_y_start),
             "Vorhersage",
             font=self.small_font,
             fill=self.BLACK,
         )
 
-        forecast_days = self.forecast.get(self._entity_id).get('forecast')[1:4]
+        actual_forecast = self.forecast.get(self._entity_id).get("forecast")[1:4]
 
-        for i, day_data in enumerate(forecast_days):
-            day_icon = ICON_MAP.get(day_data.get("condition"), "?")
-            day_name = datetime.datetime.strptime(
-                day_data.get("datetime", "---"), "%Y-%m-%dT%H:%M:%S"
-            ).strftime("%A")
-            description = day_data.get("condition", "")
-            high_temp = day_data.get("temperature", "?")
-            low_temp = day_data.get("templow", "?")
+        for i, fc_data in enumerate(actual_forecast):
+            forecast_icon = ICON_MAP.get(fc_data.get("condition"), "?")
+            day_name = f"+{i} Std."
+            high_temp = fc_data.get("temperature", "?")
+            low_temp = fc_data.get("templow", "?")
 
             # Calculate coordinates for this day's column
-            day_x = FORECAST_X_START + i * (DAY_COL_WIDTH + 10)
+            day_x = forecast_x_start + i * (forecast_col_width + 10)
 
             # Draw Day Name (Top)
             draw.text(
-                (day_x, FORECAST_START_Y),
+                (day_x, forecast_y_start),
                 f"{day_name}",
                 font=self.small_font,
                 fill=self.BLACK,
@@ -133,26 +123,18 @@ class Weather(BaseComponent):
 
             # Draw Day Icon (Middle)
             draw.text(
-                (day_x + 10, FORECAST_START_Y + 10),
-                day_icon,
+                (day_x + 10, forecast_y_start + 10),
+                forecast_icon,
                 font=icon_font,
-                fill=self.BLACK,
-            )
-
-            # Draw Description (Middle)
-            draw.text(
-                (day_x, FORECAST_START_Y + 20),
-                description,
-                font=self.small_font,
                 fill=self.BLACK,
             )
 
             # Draw Temperature (Bottom)
             temp_line = f"{high_temp} / {low_temp}"
             draw.text(
-                (day_x, FORECAST_START_Y + 40),
+                (day_x, forecast_y_start + 40),
                 temp_line,
-                font=self.regular_font,
+                font=self.small_font,
                 fill=self.BLACK,
             )
 
