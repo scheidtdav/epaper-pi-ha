@@ -100,14 +100,6 @@ class Weather(BaseComponent):
         forecast_x_start = 2
         forecast_col_width = 122 // 3
 
-        # Title
-        draw.text(
-            (2, forecast_y_start),
-            "Vorhersage",
-            font=self.small_font,
-            fill=self.BLACK,
-        )
-
         actual_forecast = self.forecast.get(self._entity_id).get("forecast")[1:5]
 
         for i, fc_data in enumerate(actual_forecast):
