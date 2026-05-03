@@ -37,7 +37,7 @@ class Weather(BaseComponent):
         if not self.weather_domain:
             self.weather_domain = client.get_domain("weather")
 
-        data = self.weather_domain.get_forecasts(
+        data = self.weather_domain.get_forecasts.trigger(
             entity_id=self._entity_id,
             type="daily",
         )

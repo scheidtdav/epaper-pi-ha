@@ -17,7 +17,9 @@ class Todo(BaseComponent):
         if not self.todo_domain:
             self.todo_domain = client.get_domain("todo")
 
-        data = self.todo_domain.get_items(
+        print(self.todo_domain.get_items)
+
+        data = self.todo_domain.get_items.trigger(
             entity_id=self._entity_id,
         )
 
