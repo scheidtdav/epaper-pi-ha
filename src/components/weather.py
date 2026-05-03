@@ -90,7 +90,7 @@ class Weather(BaseComponent):
             return img
 
         # Define starting position for the forecast grid
-        forecast_y_start = 20
+        forecast_y_start = 30
         forecast_x_start = 2
         forecast_col_width = 122 // 3 - 10  # Approx width for 3 days
 
@@ -111,7 +111,7 @@ class Weather(BaseComponent):
             low_temp = fc_data.get("templow", "?")
 
             # Calculate coordinates for this day's column
-            day_x = forecast_x_start + i * (forecast_col_width + 10)
+            day_x = forecast_x_start + i * (forecast_col_width + 20)
 
             # Draw Day Name (Top)
             draw.text(
