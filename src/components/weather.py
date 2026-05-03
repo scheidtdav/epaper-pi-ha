@@ -109,7 +109,7 @@ class Weather(BaseComponent):
             fill=self.BLACK,
         )
 
-        forecast_days = self.forecast.get(self._entity_id)[1:4]
+        forecast_days = self.forecast.get(self._entity_id).get('forecast')[1:4]
 
         for i, day_data in enumerate(forecast_days):
             day_icon = ICON_MAP.get(day_data.get("condition"), "?")
