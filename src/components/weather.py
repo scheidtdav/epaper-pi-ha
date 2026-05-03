@@ -108,11 +108,11 @@ class Weather(BaseComponent):
             fill=self.BLACK,
         )
 
-        actual_forecast = self.forecast.get(self._entity_id).get("forecast")[1:4]
+        actual_forecast = self.forecast.get(self._entity_id).get("forecast")[1:5]
 
         for i, fc_data in enumerate(actual_forecast):
             forecast_icon = ICON_MAP.get(fc_data.get("condition"), "?")
-            day_name = f"+{i} Std."
+            day_name = f"+{i + 1} Std."
             fc_temp = f"{fc_data.get('temperature', '?')}°C"
 
             # Calculate coordinates for this day's column
