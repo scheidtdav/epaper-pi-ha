@@ -136,7 +136,7 @@ class Weather(BaseComponent):
 
             # Draw Temperature (Bottom)
             draw.text(
-                (day_x, forecast_y_start + 62),
+                (day_x, forecast_y_start + 63),
                 fc_temp,
                 font=self.small_font,
                 fill=self.BLACK,
