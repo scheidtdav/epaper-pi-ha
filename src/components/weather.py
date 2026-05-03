@@ -77,12 +77,12 @@ class Weather(BaseComponent):
         temp_unit = self.entity.attributes.get("temperature_unit", "?")
         temp_string = f"{temperature}{temp_unit}"
         temp_x_start = 50
-        temp_y_start = 18
+        temp_y_start = 16
 
         draw.text(
             (temp_x_start, 2),
             "Aktuell",
-            font=self.regular_font,
+            font=self.small_font,
             fill=self.BLACK,
         )
         draw.text(
