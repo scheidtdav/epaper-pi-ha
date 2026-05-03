@@ -1,4 +1,5 @@
-from PIL import ImageFont, ImageDraw
+from PIL import ImageDraw, ImageFont
+
 from components.base_component import BaseComponent
 
 icon_font = ImageFont.truetype("./meteocons.ttf", 36)
@@ -51,6 +52,7 @@ class Weather(BaseComponent):
         img = super().render()
         draw = ImageDraw.Draw(img)
 
+        # --- 1. Check for empty content ---
         if not self._has_content:
             draw.text(
                 (0, 0),
@@ -60,10 +62,13 @@ class Weather(BaseComponent):
             )
             return img
 
-        weather_icon = ICON_MAP[self.entity.state]
+        # --- 2. Draw Current Weather (Icon & Temp) ---
+        current_icon = ICON_MAP.get(self.entity.state, "?")
+
+        # Draw current weather icon (Top Left)
         draw.text(
             (2, 2),
-            weather_icon,
+            current_icon,
             font=icon_font,
             fill=self.BLACK,
         )
@@ -71,20 +76,87 @@ class Weather(BaseComponent):
         temperature = self.entity.attributes.get("temperature", "?")
         temp_unit = self.entity.attributes.get("temperature_unit", "?")
         temp_string = f"{temperature}{temp_unit}"
-        text_bbox = draw.textbbox((36 + 9, 7), temp_string, self.regular_font)
+
+        # Estimate bounding box for temperature text (Starting slightly right of icon)
+        # Approximate position: (Width needed + margin, Y_offset)
+        # Using a fixed safe offset for initial text placement
+        temp_x_start = 50
+        temp_y_start = 2
+
         draw.text(
-            (36 + 9, 7),
+            (temp_x_start, temp_y_start),
             temp_string,
             font=self.regular_font,
             fill=self.BLACK,
         )
 
-        if self.forecast:
-            print(self.forecast)
+        # --- 3. Draw Forecast (Next 3 days) ---
+        if not self.forecast:
+            return img
+
+        # Define starting position for the forecast grid
+        FORECAST_START_Y = 20
+        FORECAST_X_START = 2
+        DAY_COL_WIDTH = 122 // 3 - 10  # Approx width for 3 days
+
+        # Title
+        draw.text(
+            (2, FORECAST_START_Y - 10),
+            "🗓️ Forecast",
+            font=self.small_font,
+            fill=self.BLACK,
+        )
+
+        # Iterate through the next 3 days (or fewer if data is limited)
+        forecast_days = self.forecast[:3]
+
+        for i, day_data in enumerate(forecast_days):
+            # ASSUMPTION: day_data is a dictionary/object with these keys:
+            # 'date': Date string (e.g., "Fri")
+            # 'icon_map': The icon code (e.g., "H")
+            # 'description': A readable description (e.g., "Partly Cloudy")
+            # 'temp_high': High temperature
+            # 'temp_low': Low temperature
+
+            day_icon = ICON_MAP.get(day_data.get("icon_map"), "?")
+            day_name = day_data.get("date", "---")
+            description = day_data.get("description", "")
+            high_temp = day_data.get("temp_high", "?")
+            low_temp = day_data.get("temp_low", "?")
+
+            # Calculate coordinates for this day's column
+            day_x = FORECAST_X_START + i * (DAY_COL_WIDTH + 10)
+
+            # Draw Day Name (Top)
             draw.text(
-                (text_bbox[2], 0),
-                "hello forecast",
+                (day_x, FORECAST_START_Y),
+                f"{day_name}",
                 font=self.small_font,
+                fill=self.BLACK,
+            )
+
+            # Draw Day Icon (Middle)
+            draw.text(
+                (day_x + 10, FORECAST_START_Y + 10),
+                day_icon,
+                font=icon_font,
+                fill=self.BLACK,
+            )
+
+            # Draw Description (Middle)
+            draw.text(
+                (day_x, FORECAST_START_Y + 20),
+                description,
+                font=self.small_font,
+                fill=self.BLACK,
+            )
+
+            # Draw Temperature (Bottom)
+            temp_line = f"{high_temp} / {low_temp}"
+            draw.text(
+                (day_x, FORECAST_START_Y + 40),
+                temp_line,
+                font=self.regular_font,
                 fill=self.BLACK,
             )
 
