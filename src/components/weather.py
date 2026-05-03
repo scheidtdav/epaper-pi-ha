@@ -41,7 +41,7 @@ class Weather(BaseComponent):
 
         data = self.weather_domain.get_forecasts.trigger(
             entity_id=self._entity_id,
-            type="daily",
+            type="hourly",
         )
 
         last_forecast = self.forecast
@@ -90,9 +90,9 @@ class Weather(BaseComponent):
             return img
 
         # Define starting position for the forecast grid
-        forecast_y_start = 30
+        forecast_y_start = 46
         forecast_x_start = 2
-        forecast_col_width = 122 // 3 - 10  # Approx width for 3 days
+        forecast_col_width = 122 // 3
 
         # Title
         draw.text(
@@ -111,11 +111,11 @@ class Weather(BaseComponent):
             low_temp = fc_data.get("templow", "?")
 
             # Calculate coordinates for this day's column
-            day_x = forecast_x_start + i * (forecast_col_width + 20)
+            day_x = forecast_x_start + i * (forecast_col_width + 28)
 
             # Draw Day Name (Top)
             draw.text(
-                (day_x, forecast_y_start),
+                (day_x, forecast_y_start + 14),
                 f"{day_name}",
                 font=self.small_font,
                 fill=self.BLACK,
@@ -123,7 +123,7 @@ class Weather(BaseComponent):
 
             # Draw Day Icon (Middle)
             draw.text(
-                (day_x + 10, forecast_y_start + 10),
+                (day_x + 10, forecast_y_start + 28),
                 forecast_icon,
                 font=icon_font,
                 fill=self.BLACK,
@@ -132,7 +132,7 @@ class Weather(BaseComponent):
             # Draw Temperature (Bottom)
             temp_line = f"{high_temp} / {low_temp}"
             draw.text(
-                (day_x, forecast_y_start + 40),
+                (day_x, forecast_y_start + 60),
                 temp_line,
                 font=self.small_font,
                 fill=self.BLACK,
