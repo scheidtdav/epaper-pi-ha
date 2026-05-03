@@ -107,8 +107,7 @@ class Weather(BaseComponent):
         for i, fc_data in enumerate(actual_forecast):
             forecast_icon = ICON_MAP.get(fc_data.get("condition"), "?")
             day_name = f"+{i} Std."
-            high_temp = fc_data.get("temperature", "?")
-            low_temp = fc_data.get("templow", "?")
+            fc_temp = f"{fc_data.get('temperature', '?')}°C"
 
             # Calculate coordinates for this day's column
             day_x = forecast_x_start + i * (forecast_col_width + 28)
@@ -130,10 +129,9 @@ class Weather(BaseComponent):
             )
 
             # Draw Temperature (Bottom)
-            temp_line = f"{high_temp} / {low_temp}"
             draw.text(
                 (day_x, forecast_y_start + 60),
-                temp_line,
+                fc_temp,
                 font=self.small_font,
                 fill=self.BLACK,
             )
