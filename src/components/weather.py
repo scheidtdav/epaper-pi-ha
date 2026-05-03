@@ -77,8 +77,14 @@ class Weather(BaseComponent):
         temp_unit = self.entity.attributes.get("temperature_unit", "?")
         temp_string = f"{temperature}{temp_unit}"
         temp_x_start = 50
-        temp_y_start = 2
+        temp_y_start = 18
 
+        draw.text(
+            (temp_x_start, 2),
+            "Aktuell",
+            font=self.regular_font,
+            fill=self.BLACK,
+        )
         draw.text(
             (temp_x_start, temp_y_start),
             temp_string,
@@ -90,7 +96,7 @@ class Weather(BaseComponent):
             return img
 
         # Define starting position for the forecast grid
-        forecast_y_start = 46
+        forecast_y_start = 42
         forecast_x_start = 2
         forecast_col_width = 122 // 3
 
@@ -122,7 +128,7 @@ class Weather(BaseComponent):
 
             # Draw Day Icon (Middle)
             draw.text(
-                (day_x + 10, forecast_y_start + 28),
+                (day_x + 10, forecast_y_start + 30),
                 forecast_icon,
                 font=icon_font,
                 fill=self.BLACK,
@@ -130,7 +136,7 @@ class Weather(BaseComponent):
 
             # Draw Temperature (Bottom)
             draw.text(
-                (day_x, forecast_y_start + 60),
+                (day_x, forecast_y_start + 62),
                 fc_temp,
                 font=self.small_font,
                 fill=self.BLACK,
