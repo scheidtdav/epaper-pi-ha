@@ -1,4 +1,5 @@
 from PIL import ImageDraw
+
 from components.base_component import BaseComponent
 
 
@@ -16,8 +17,6 @@ class Todo(BaseComponent):
 
         if not self.todo_domain:
             self.todo_domain = client.get_domain("todo")
-
-        print(self.todo_domain.get_items)
 
         data = self.todo_domain.get_items.trigger(
             entity_id=self._entity_id,
