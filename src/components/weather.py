@@ -109,8 +109,7 @@ class Weather(BaseComponent):
             fill=self.BLACK,
         )
 
-        # Iterate through the next 3 days (or fewer if data is limited)
-        forecast_days = self.forecast[self._entity_id][:3]
+        forecast_days = self.forecast.get(self._entity_id)[1:4]
 
         for i, day_data in enumerate(forecast_days):
             day_icon = ICON_MAP.get(day_data.get("condition"), "?")
