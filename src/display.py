@@ -65,6 +65,7 @@ class Display:
                 continue
 
             print(f"render component {entity._entity_id}")
+            self._current_entity_index = i
             image = entity.render()
             self._display.image(image)
             self._display.display()
