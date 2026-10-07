@@ -36,18 +36,18 @@ class Display:
         self._display.rotation = 1
 
     def cycle(self):
-        next = True
         print("called cycle")
-        next_index = self._current_entity_index
-        while next:
-            next_index = (self._current_entity_index + 1) % len(self._entities)
-            next_entity = self._entities[next_index]
-            next = not next_entity.has_content()
+        # Find the next entity with content, starting from current + 1
+        for i in range(len(self._entities)):
+            next_index = (self._current_entity_index + 1 + i) % len(self._entities)
+            if self._entities[next_index].has_content():
+                self._current_entity_index = next_index
+                image = self.get_current_entity().render()
+                self._display.image(image)
+                self._display.display()
+                return
 
-        self._current_entity_index = next_index
-        image = self.get_current_entity().render()
-        self._display.image(image)
-        self._display.display()
+        # If no entity has content, do nothing (stay on current)
 
     def get_current_entity(self):
         return self._entities[self._current_entity_index]
