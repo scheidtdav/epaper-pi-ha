@@ -28,6 +28,23 @@ class Todo(BaseComponent):
         self._has_changes = self.todos != last_todos
         self._has_content = True if self.todos and int(self.entity.state) > 0 else False
 
+    def handle_action(self):
+        if not self.todo_domain or not self._has_content:
+            return
+
+        todo_items = self.todos.get("items", [])
+        unchecked_todos = [t for t in todo_items if t.get("status") == "needs_action"]
+
+        if unchecked_todos:
+            first_todo = unchecked_todos[0]
+            item_identifier = first_todo.get("uid") or first_todo.get("summary")
+            if item_identifier:
+                self.todo_domain.update_item.trigger(
+                    entity_id=self._entity_id,
+                    item=item_identifier,
+                    status="completed"
+                )
+
     def render(self):
         img = super().render()
         draw = ImageDraw.Draw(img)
