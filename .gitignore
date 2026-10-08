@@ -209,3 +209,6 @@ __marimo__/
 *.ttf
 
 src/config.toml
+
+# Test artifacts
+tests/artifacts/
