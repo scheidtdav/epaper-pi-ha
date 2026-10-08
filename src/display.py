@@ -1,27 +1,29 @@
 import asyncio
+from typing import Any, List
 import digitalio
 import busio
 import board
 import gpio
 from adafruit_epd.ssd1675 import Adafruit_SSD1675
+from components.base_component import BaseComponent
 
 
 class Display:
-    DISPLAY_UPDATE_TIMEOUT = 300  # you should not update more often than every 5 mins
-    _entities = []
-    _current_entity_index = 0
+    DISPLAY_UPDATE_TIMEOUT: int = 300  # you should not update more often than every 5 mins
+    _entities: List[BaseComponent]
+    _current_entity_index: int = 0
 
-    def __init__(self, display_config, entities):
-        self._entities = entities
+    def __init__(self, display_config: dict, entities: List[BaseComponent]) -> None:
+        self._entities: List[BaseComponent] = entities
 
         spi = busio.SPI(board.SCK, MOSI=board.MOSI, MISO=board.MISO)
         ecs = digitalio.DigitalInOut(gpio.deserialize(display_config["ecs_pin"]))
         dc = digitalio.DigitalInOut(gpio.deserialize(display_config["dc_pin"]))
         rst = digitalio.DigitalInOut(gpio.deserialize(display_config["rst_pin"]))
         busy = digitalio.DigitalInOut(gpio.deserialize(display_config["busy_pin"]))
-        srcs = None
+        srcs: Any = None
 
-        self._display = Adafruit_SSD1675(
+        self._display: Any = Adafruit_SSD1675(
             display_config["width_in_pixel"],
             display_config["height_in_pixel"],
             spi,
@@ -35,27 +37,27 @@ class Display:
         # only landscape is supported, thus rotation needs to be set to 1
         self._display.rotation = 1
 
-    def cycle(self):
+    def cycle(self) -> None:
         print("called cycle")
         # Find the next entity with content, starting from current + 1
         for i in range(len(self._entities)):
-            next_index = (self._current_entity_index + 1 + i) % len(self._entities)
+            next_index: int = (self._current_entity_index + 1 + i) % len(self._entities)
             if self._entities[next_index].has_content():
                 self._current_entity_index = next_index
-                image = self.get_current_entity().render()
+                image: Any = self.get_current_entity().render()
                 self._display.image(image)
                 self._display.display()
                 return
 
         # If no entity has content, do nothing (stay on current)
 
-    def get_current_entity(self):
+    def get_current_entity(self) -> BaseComponent:
         return self._entities[self._current_entity_index]
 
-    def __update__(self):
+    def __update__(self) -> None:
         print("__update__")
         for i in range(self._current_entity_index + 1):
-            entity = self._entities[i]
+            entity: BaseComponent = self._entities[i]
             if not entity.has_changes():
                 print(f"no update for {entity._entity_id}")
                 continue
@@ -66,12 +68,12 @@ class Display:
 
             print(f"render component {entity._entity_id}")
             self._current_entity_index = i
-            image = entity.render()
+            image: Any = entity.render()
             self._display.image(image)
             self._display.display()
             return
 
-    async def update(self):
+    async def update(self) -> None:
         while True:
             self.__update__()
             await asyncio.sleep(self.DISPLAY_UPDATE_TIMEOUT)

@@ -1,27 +1,28 @@
 import asyncio
+from typing import Any, Dict
 import digitalio
 import gpio
 from display import Display
 
 
 class Button:
-    BUTTON_UPDATE_TIMEOUT = 0.05
-    _buttons = {}
+    BUTTON_UPDATE_TIMEOUT: float = 0.05
+    _buttons: Dict[Any, Dict[str, str]] = {}
 
     def __init__(
         self,
-        config,
+        config: Dict[str, Dict[str, str]],
         display: Display,
-    ):
-        self._display = display
+    ) -> None:
+        self._display: Display = display
 
         # read config
         for pin, action in config.items():
-            button = digitalio.DigitalInOut(gpio.deserialize(pin))
+            button: Any = digitalio.DigitalInOut(gpio.deserialize(pin))
             button.switch_to_input()
             self._buttons[button] = action["action"]
 
-    def button_pressed(self, button) -> bool:
+    def button_pressed(self, button: Any) -> bool:
         return not button.value
 
     async def handle_buttons(self) -> None:
