@@ -38,23 +38,39 @@ class Sensor(BaseComponent):
         draw = ImageDraw.Draw(img)
 
         if not self._has_content:
+            text = f"No content for entity id '{self._entity_id}'"
+            text_width = self.text_width(text, draw, self.regular_font)
+            x = (self._dimensions[0] - text_width) // 2
+            y = (self._dimensions[1] - self.regular_font.size) // 2
             draw.text(
-                (0, 0),
-                f"No content for entity id '{self._entity_id}'",
+                (x, y),
+                text,
                 font=self.regular_font,
                 fill=self.BLACK,
             )
             return img
 
+        title = f"{self.entity.attributes.get('friendly_name', self._entity_id)}"
+        value = self._format_state(self.entity.state)
+        
+        title_width = self.text_width(title, draw, self.regular_font)
+        value_width = self.text_width(value, draw, self.large_font)
+        
+        title_x = (self._dimensions[0] - title_width) // 2
+        value_x = (self._dimensions[0] - value_width) // 2
+        
+        title_y = (self._dimensions[1] - self.regular_font.size - self.large_font.size) // 2
+        value_y = title_y + self.regular_font.size
+
         draw.text(
-            (0, 0),
-            f"{self.entity.attributes.get('friendly_name', self._entity_id)}",
+            (title_x, title_y),
+            title,
             font=self.regular_font,
             fill=self.BLACK,
         )
         draw.text(
-            (0, 32),
-            self._format_state(self.entity.state),
+            (value_x, value_y),
+            value,
             font=self.large_font,
             fill=self.BLACK,
         )
