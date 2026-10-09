@@ -39,6 +39,12 @@ class Todo(BaseComponent):
             first_todo: Dict[str, Any] = unchecked_todos[0]
             item_identifier: Optional[str] = first_todo.get("uid") or first_todo.get("summary")
             if item_identifier:
+                first_todo["status"] = "completed"
+                if self.entity:
+                    current_count = int(self.entity.state)
+                    new_count = max(0, current_count - 1)
+                    self.entity.state = str(new_count)
+                    self._has_content = True if self.todos and new_count > 0 else False
                 self.todo_domain.update_item.trigger(
                     entity_id=self._entity_id,
                     item=item_identifier,
