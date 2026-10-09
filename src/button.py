@@ -44,4 +44,4 @@ class Button:
         should_refresh = self._display.get_current_entity().handle_action()
         if should_refresh:
             # Trigger immediate display refresh by calling the internal update logic
-            self._display._Display__update__()
+            self._display.trigger_update()

@@ -134,3 +134,6 @@ class Display:
             # Use a shorter timeout while waiting for initial data
             timeout = 5 if not self._initialized else self.DISPLAY_UPDATE_TIMEOUT
             await asyncio.sleep(timeout)
+
+    async def trigger_update(self) -> None:
+        self.__update__()
