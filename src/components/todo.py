@@ -39,7 +39,11 @@ class Todo(BaseComponent):
             first_todo: Dict[str, Any] = unchecked_todos[0]
             item_identifier: Optional[str] = first_todo.get("uid") or first_todo.get("summary")
             if item_identifier:
-                first_todo["status"] = "completed"
+                # Find and update the todo in self.todos["items"]
+                for item in self.todos.get("items", []):
+                    if item.get("uid") == item_identifier or item.get("summary") == item_identifier:
+                        item["status"] = "completed"
+                        break
                 if self.entity:
                     current_count = int(self.entity.state)
                     new_count = max(0, current_count - 1)
