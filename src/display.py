@@ -117,10 +117,6 @@ class Display:
         # Normal update logic
         for i in range(self._current_entity_index + 1):
             entity: BaseComponent = self._entities[i]
-            if not entity.has_changes():
-                print(f"no update for {entity._entity_id}")
-                continue
-
             if not entity.has_content():
                 print(f"no content for {entity._entity_id}")
                 continue

@@ -26,7 +26,6 @@ class Todo(BaseComponent):
         last_todos: Dict[str, Any] = self.todos
         self.todos = data.get(self._entity_id)
 
-        self._has_changes = self.todos != last_todos
         self._has_content = True if self.todos and int(self.entity.state) > 0 else False
 
     def handle_action(self) -> None:

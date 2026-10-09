@@ -32,7 +32,6 @@ class Sensor(BaseComponent):
         if not self.entity:
             self.entity = client.get_state(entity_id=self._entity_id)
 
-        self._has_changes = self.entity.state != state_before
         self._has_content = self.entity.state is not None
 
     def render(self) -> Image.Image:

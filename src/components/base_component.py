@@ -23,22 +23,17 @@ class BaseComponent:
         self._entity_id: str = entity_id
         self._dimensions: Tuple[int, int] = display_dimensions
         self._has_content: bool = False
-        self._has_changes: bool = False
         self._background_color: Tuple[int, int, int] = self.WHITE
 
     def handle_action(self) -> None:
         pass
 
     def render(self) -> Image.Image:
-        self._has_changes = False
         image: Image.Image = Image.new("RGB", self._dimensions, color=self._background_color)
         return image
 
     def has_content(self) -> bool:
         return self._has_content
-
-    def has_changes(self) -> bool:
-        return self._has_changes
 
     def text_width(
         self, s: str, draw: ImageDraw.ImageDraw, font: ImageFont.ImageFont

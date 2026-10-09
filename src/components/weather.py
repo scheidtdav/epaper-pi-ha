@@ -47,12 +47,9 @@ class Weather(BaseComponent):
 
         last_forecast: Optional[Dict[str, Any]] = self.forecast
         self.forecast = data
-
-        self._has_changes = self.forecast != last_forecast if self._has_changes is False else False
         self._has_content = True if self.forecast else False
 
     def render(self) -> Image.Image:
-        self._has_changes = False
         img: Image.Image = super().render()
         draw: ImageDraw.ImageDraw = ImageDraw.Draw(img)
 
