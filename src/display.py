@@ -18,8 +18,8 @@ class Display:
         self._entities: List[BaseComponent] = entities
         self._initialized: bool = False
         self._dimensions: tuple[int, int] = (
-            display_config["width_in_pixel"],
             display_config["height_in_pixel"],
+            display_config["width_in_pixel"],
         )
 
         spi = busio.SPI(board.SCK, MOSI=board.MOSI, MISO=board.MISO)
