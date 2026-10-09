@@ -25,8 +25,9 @@ class BaseComponent:
         self._has_content: bool = False
         self._background_color: Tuple[int, int, int] = self.WHITE
 
-    def handle_action(self) -> None:
-        pass
+    def handle_action(self) -> bool:
+        """Handle action for the component. Returns True if display should refresh immediately."""
+        return False
 
     def render(self) -> Image.Image:
         image: Image.Image = Image.new("RGB", self._dimensions, color=self._background_color)

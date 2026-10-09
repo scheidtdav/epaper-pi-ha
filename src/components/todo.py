@@ -28,9 +28,9 @@ class Todo(BaseComponent):
 
         self._has_content = True if self.todos and int(self.entity.state) > 0 else False
 
-    def handle_action(self) -> None:
+    def handle_action(self) -> bool:
         if not self.todo_domain or not self._has_content:
-            return
+            return False
 
         todo_items: List[Dict[str, Any]] = self.todos.get("items", [])
         unchecked_todos: List[Dict[str, Any]] = [t for t in todo_items if t.get("status") == "needs_action"]
@@ -44,6 +44,8 @@ class Todo(BaseComponent):
                     item=item_identifier,
                     status="completed"
                 )
+                return True
+        return False
 
     def render(self) -> Image.Image:
         img: Image.Image = super().render()

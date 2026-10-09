@@ -41,4 +41,7 @@ class Button:
         self._display.cycle()
 
     def handle_action(self) -> None:
-        self._display.get_current_entity().handle_action()
+        should_refresh = self._display.get_current_entity().handle_action()
+        if should_refresh:
+            # Trigger immediate display refresh by calling the internal update logic
+            self._display._Display__update__()
